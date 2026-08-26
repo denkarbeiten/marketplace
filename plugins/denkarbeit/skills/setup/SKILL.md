@@ -29,7 +29,7 @@ Die Templates dieses Skills liegen unter `templates/` relativ zum Skill-Basisver
 | 2 | Root-Kontext | `{workspace}/context.md` existiert mit Backbone-Kopf (Steckbrief, Motivation) | Pflicht |
 | 3 | Sprache | Sprachregeln in der CLAUDE.md vorhanden (Baustein 1); `{workspace}/language.md` **optional**, nur mit geeignetem Referenzmaterial | Pflicht (Regeln) · optional (Referenz) |
 | 4 | Bestand | Liegt im Workspace Material, das **nicht** aus diesem Setup stammt (alles außer `context.md`, `CLAUDE.md`, `language.md` im Root)? | Situativ |
-| 5 | Secrets | Ein Vault ist benannt und nutzbar (OS-Schlüsselbund oder ein **angemeldeter** Passwort-Manager) · CLAUDE.md trägt den Secrets-Block · `infra.md` nur, wenn ein System benannt wurde | Pflicht |
+| 5 | Secrets | Ein Vault ist benannt und nutzbar (OS-Schlüsselbund oder ein **angemeldeter** Passwort-Manager) · CLAUDE.md trägt den Secrets-Block · `infra.md` hält den Zustand fest, auch wenn noch kein System angebunden ist | Pflicht |
 | 6 | Permissions | Der Nutzer weiß, dass Claude im Auslieferungszustand nichts ohne Rückfrage tut, und kennt den Weg, das zu ändern | Pflicht (erklären) · optional (setzen) |
 
 Workspace-Pfad finden: aus der CLAUDE.md (Baustein 1 verankert ihn). Fehlt sie **oder trägt sie keinen Workspace-Anker** (der Regelfall bei bestehender Fremd-Konfiguration): den User fragen, bei Neueinrichtung `~/workspace` vorschlagen. Widersprechen sich Anker und Nutzerangabe, **gilt die Nutzerangabe** — der Anker ist dann veraltet und wird im selben Lauf nachgezogen, nicht stillschweigend übergangen. Alle Skills arbeiten danach gegen diesen Anker; `{workspace}` in den Skills meint immer ihn, nie einen festen Pfad.
@@ -54,15 +54,16 @@ Workspace-Pfad finden: aus der CLAUDE.md (Baustein 1 verankert ihn). Fehlt sie *
 
    **Zuerst nach Unterlagen fragen, nicht nebenbei.** Zwei Dokumente heben das Ergebnis deutlich, und wer sie hat, spart die Hälfte der Fragen: **eines zur Person** (CV als PDF, LinkedIn-Export über „Als PDF speichern" — URLs scheitern an der Login-Wall) und **eines zum Hauptkontext** (Firmenprofil, Projektbeschreibung, Angebot, ein Papier über den Arbeitgeber). Am wertvollsten ist ein **selbstverfasstes Arbeitsdokument**: Es verrät Rolle und Sprache zugleich. Liegt nichts vor, trägt das Interview allein — aber dann sagen, dass der Steckbrief dünner ausfällt und später nachgeschärft werden kann, statt so zu tun, als sei es gleichwertig. **Liegen Unterlagen vor, wird zuerst gelesen und dann nur die Lücke gefragt.** Nicht ankündigen, dass die Fragen schrumpfen, und sie anschließend doch alle stellen — was im Dokument steht, wird höchstens zur Bestätigung vorgelegt („Du bist demnach angestellt bei …, richtig?"). Alles andere ist Doppelarbeit und erweckt den Eindruck, die Unterlagen seien ungelesen geblieben.
 
-   **Vier Fragen, nicht mehr.** Jede muss von jemandem beantwortbar sein, der Claude heute zum ersten Mal einrichtet — also **ohne Erfahrung mit dem Werkzeug**. Fragen nach Absichten („wofür soll Claude dich entlasten?") oder nach Gewohnheiten im Umgang damit („was erklärst du immer wieder neu?") scheitern an dieser Bedingung, so einleuchtend sie beim Schreiben wirken.
+   **Drei Fragen, nicht mehr.** Jede muss von jemandem beantwortbar sein, der Claude heute zum ersten Mal einrichtet — also **ohne Erfahrung mit dem Werkzeug**:
    1. Was machst du, in welchem Rahmen (angestellt, selbständig, eigene Firma)?
    2. Für wen arbeitest du — Kunden, Arbeitgeber, interne Bereiche? Grobe Typen genügen.
    3. Welche zwei, drei Tätigkeiten machen den Großteil deiner Zeit aus?
-   4. Was hat dich dazu gebracht, das hier einzurichten?
 
-   Frage 4 füttert die Motivation, den zweiten Pflichtteil des Backbones. Sie fragt nach etwas Vergangenem, das jeder weiß, der gerade installiert hat.
+   **Die Motivation wird nicht erfragt, sondern formuliert und zur Bestätigung vorgelegt.** Drei Anläufe sind daran gescheitert — „wofür soll Claude dich entlasten?", „was erklärst du immer wieder neu?", „was hat dich dazu gebracht?". Alle drei verlangen eine Auskunft über einen Umgang, den es noch nicht gibt, und im Kurskontext lautet die ehrliche Antwort ohnehin „weil es im Video stand". Aus Rolle, Gegenüber und Tätigkeiten lässt sich der Satz selbst schreiben — etwa „Dieser Workspace hält den Kontext für die Arbeit bei {Org}, damit nicht jeder Chat bei null anfängt." Vorlegen, korrigieren lassen, fertig. Eine Frage, die der Fragende selbst beantworten kann, wird nicht gestellt.
 
    **Nicht gefragt wird nach laufenden Vorhaben.** Die gehören in den Kontext-Ordner des Vorhabens, nicht in den Root — sonst sammelt der Steckbrief Material ein, das derselbe Lauf hinterher eine Ebene tiefer einsortiert.
+
+   **Keine Frage zweimal stellen.** Was im ersten Block offenblieb, wird nicht am Ende wiederholt — unbeantwortet heißt abgelehnt.
 
    Der Root-Kontext braucht Gegenwart, nicht Werdegang — CV-Vergangenheit nur als Steckbrief-Hintergrund. Keine Use-Case-Findung. Dann `{workspace}/context.md` nach der contextify-Logik erzeugen — das Backbone und die Steckbrief-Felder stehen dort, nicht hier.
 
@@ -87,9 +88,13 @@ Workspace-Pfad finden: aus der CLAUDE.md (Baustein 1 verankert ihn). Fehlt sie *
    - **Noch nichts** → der Schlüsselbund, ohne Umschweife. Er ist da, kostet nichts und muss nicht eingerichtet werden.
 
    Kein Produkt empfehlen, das der Nutzer nicht schon hat; kein Konto anlegen lassen. Eine Klartext-Datei ist unter keinen Umständen ein Fallback. Laufzeit-Muster einmal am gewählten Vault zeigen: Secret in die Umgebung der Session laden, nie in eine Datei.
-   Dann, **und nur wenn ein konkretes System benannt wurde**, die zweite Frage: gegen welche Systeme wird gearbeitet (Shop, ERP, Datenbank, API, MCP-Server)? Kommt nichts, entsteht **keine `infra.md`** — ein Gerüst mit leerer Systemtabelle und erfundenem Beispiel-Eintrag verwaist ab dem Tag seiner Entstehung. Stattdessen ein Satz: sobald das erste System dazukommt, entsteht sie.
+   Dann die zweite Frage, als Entscheidung formuliert statt als Wissensabfrage: **„Willst du die Zugänge gleich mit mir einrichten, oder lieber später?"** Nennen die Unterlagen bereits Systeme (Shop, ERP, Datenbank, API, MCP-Server), diese aufzählen statt offen zu fragen.
 
-   Wurde ein System benannt: **`infra.md` anlegen und mit diesem System befüllen** — im Ordner, zu dem es gehört (Dienst-Infra). Existiert dieser Ordner noch nicht (der Regelfall beim Ersteinrichten, weil die Scope-Linie hier endet): im Workspace-Root anlegen und als Zeile in den Offenen Punkten vermerken, dass sie mitwandert, sobald der zugehörige Ordner entsteht. Sektionen: *System & Zugang* (Verweis-Muster: Vault + Eintragsname + Zugriffs-Kommando — nie der Wert), *Eigenheiten*, *Fehlerbilder & Fixes*. Maschinen-Infra (Tools, MCP-Konfig) → `{konfig}/reference/infra.md`.
+   **Die `infra.md` entsteht in beiden Fällen** — sie protokolliert den Zustand, und der ist auch dann eine Aussage, wenn noch nichts angebunden ist. Was sie nie enthält: eine leere Systemtabelle mit erfundenem Beispiel-Eintrag. Stattdessen der erhobene Stand:
+   - **Später:** der gewählte Vault mit dem Lade-Muster dafür, dazu der Satz, dass heute kein System angebunden ist und der erste Eintrag entsteht, sobald sich das ändert.
+   - **Gleich:** dasselbe, plus je System eine Zeile nach dem Verweis-Muster (Vault · Eintragsname · Zugriffs-Kommando).
+
+   Ort: der Ordner, zu dem das System gehört (Dienst-Infra). Existiert dieser Ordner noch nicht — der Regelfall beim Ersteinrichten, weil die Scope-Linie hier endet —, im Workspace-Root anlegen und unter „Offene Punkte" vermerken, dass sie mitwandert, sobald der zugehörige Ordner entsteht. Sektionen: *System & Zugang* (Verweis-Muster: Vault + Eintragsname + Zugriffs-Kommando — nie der Wert), *Eigenheiten*, *Fehlerbilder & Fixes*. Maschinen-Infra (Tools, MCP-Konfig) → `{konfig}/reference/infra.md`.
    3. **Secrets-Block der CLAUDE.md** verifizieren (Baustein 1 legt ihn aus dem Template an; bei Alt-Installationen fehlt er → ergänzen vorschlagen).
    Liegen bereits Zugriffs-Praktiken in flüchtigen Notizen (Scratchpad, temp.md, Chat-Verläufe), werden sie in die `infra.md` **geerntet** — das ist der häufigste Alt-Fall.
 
@@ -99,7 +104,7 @@ Workspace-Pfad finden: aus der CLAUDE.md (Baustein 1 verankert ihn). Fehlt sie *
 
    Im Regelfall ist nichts gesetzt: Claude fragt dann vor jeder Datei-Änderung und jedem Kommando. Das in zwei Sätzen erklären und sagen, warum es sinnvoll ist, es zunächst so zu lassen — jede Rückfrage zeigt, was das Werkzeug tun will, und das ist die billigste Art, es kennenzulernen. Dazu der Satz, dass sich das jederzeit ändern lässt („sag mir einfach Bescheid"). Findest du bereits Regeln vor, nenne sie in Klartext statt in Syntax und lass sie unangetastet.
 
-   **Danach das Angebot machen, nicht verschweigen.** Wer jetzt schon weniger Rückfragen will, bekommt genau eine Stufe — keine Profilauswahl, keine Einzelabfrage von Regeln. Die drei Bausteine, jeder mit seinem Grund in einem Satz:
+   **Danach das Angebot machen, nicht verschweigen** — und zwar in Nutzersprache. Nicht „willst du eine Permissions-Stufe setzen?", sondern: **„Soll ich einstellen, dass Claude Dateien ohne Rückfrage ändern darf? Löschen und Zugangsdaten bleiben geschützt."** Wer ja sagt, bekommt genau eine Stufe — keine Profilauswahl, keine Einzelabfrage von Regeln. Die drei Bausteine, jeder mit seinem Grund in einem Satz:
    - `"defaultMode": "acceptEdits"` — Dateien ändern ohne Rückfrage. Vertretbar, weil Änderungen sichtbar und umkehrbar sind.
    - `"ask"`: `Bash(rm:*)`, `Bash(unlink:*)`, `Bash(rmdir:*)` — Löschen ist nicht umkehrbar und wird gefragt, auch wenn sonst nichts gefragt wird.
    - `"deny"`: `Read(./.env*)`, `Read(./secrets/**)` — Dateien mit Zugangsdaten werden nicht einmal gelesen.
