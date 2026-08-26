@@ -9,7 +9,7 @@ Ein Satz an Claude Code genügt — die Kommandos kennt es selbst:
 > Installier mir bitte das Denkarbeit-Plugin von `<QUELLE>`.
 
 `<QUELLE>` ist der Marketplace-Ort:
-- produktiv: `marvinkassuehlke/denkarbeit-marketplace` (GitHub)
+- produktiv: `denkarbeiten/marketplace` (GitHub)
 - lokaler Test: ein Pfad auf einen Klon dieses Repos
 
 Claude liest den Marketplace, prüft die Manifeste und fragt einmal nach Freigabe für
