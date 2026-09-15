@@ -126,7 +126,7 @@ Kein Vorgang, ein Handgriff: `log.md` und `memory.md` im Ordner des Vorhabens an
 Die Datei beginnt mit einem Header, gefolgt von YAML-Einträgen. **Neueste Einträge stehen oben** — nie vom Dateiende lesen.
 
 ````markdown
-# Log — {Stakeholder}
+# Log: {Stakeholder}
 
 ```yaml
 - date: 2026-03-18
@@ -138,7 +138,7 @@ Die Datei beginnt mit einem Header, gefolgt von YAML-Einträgen. **Neueste Eintr
     an. Das ist nicht der bestellte Umfang und trotzdem der
     richtige Schnitt; {Kundin} trägt ihn mit.
   artifacts:
-    - /{ordner}/erhebung_ist_analyse.md
+    - erhebung_ist_analyse.md
 
 - date: 2026-03-16
   event: Prototyp bewusst ohne unser Branding übergeben
@@ -147,7 +147,7 @@ Die Datei beginnt mit einem Header, gefolgt von YAML-Einträgen. **Neueste Eintr
     Werkzeug-Demo. Wer das Ergebnis überzeugend findet, fragt nach
     dem Weg dorthin von selbst.
   artifacts:
-    - /{ordner}/report_q1.html
+    - report_q1.html
 ```
 ````
 
@@ -160,6 +160,8 @@ Die Datei beginnt mit einem Header, gefolgt von YAML-Einträgen. **Neueste Eintr
 - **Kein Task-Tracking.** Keine offenen Punkte, keine TODOs, keine Status-Felder. (Tasks und ihr aktueller Stand leben in `context.md` §Offene Punkte — nicht in memory.)
 - **Kein Status-Tracking.** "Projekt ist aktiv" gehört in `context.md`. Memory erfasst Übergänge, nicht Zustände.
 - **Artefakt-Links zeigen auf Dauerhaftes.** `temp.md` (flüchtiges Arbeitsblatt) ist kein stabiles Ziel — Inhalt, der referenziert werden soll, zuerst in ein dauerhaftes Artefakt ernten; sonst den flüchtigen Charakter im Eintrag vermerken.
+- **Artefakt-Pfade relativ zum Ordner der `log.md`.** Wird das Vorhaben verschoben, bleiben sie gültig; Pfade vom Workspace-Root aus brechen dann.
+- **Ein Aufruf, ein Eintrag — aber nicht ein Tag, ein Eintrag.** Fallen nach dem Eintrag in derselben Session weitere Übergänge an (eine Löschung, eine Zuordnung, ein Prüfergebnis), entsteht ein zweiter Eintrag mit demselben Datum. `log.md` wird nie direkt editiert; ein Nachtrag im bestehenden Eintrag ist der Weg am Skill vorbei.
 
 ## Memory-Format (`memory.md`)
 
@@ -172,7 +174,7 @@ Prosa-Markdown, verdichtet. Im Inhalt keine YAML-Einträge, keine starre Struktu
 created: 2025-11-15
 updated: 2026-03-18
 ---
-# Memory — {Stakeholder}
+# Memory: {Stakeholder}
 
 ## Zusammenarbeit
 

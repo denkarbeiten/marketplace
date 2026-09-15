@@ -26,7 +26,7 @@ Fixer Kopf, freie Tiefe: Die fünf Überschriften liegen fest; unter „Lage" is
 Die Felder ergeben sich daraus, **was der Ordner beschreibt**, nicht aus seiner Pfadtiefe:
 
 - **Mich selbst** (die `context.md` im Workspace-Root): Eckdaten, Rollen, Angebot/Tätigkeit, Arbeitsweise; Domänen nur als Typ-Orientierung, kein gepflegtes Verzeichnis — point, don't duplicate.
-- **Ein Gegenüber oder eigener Bereich** (Kunde, Arbeitgeber, Firma, privates Feld): Org-Eckdaten + **Personen-Block**. Muster: `**{Name}** — {Rolle/Funktion} · {Kontakt, optional} · {Hinweis, nur wenn sachlich}`. Org-weite Personen hier, vorhabenspezifische Kontakte im jeweiligen Vorhaben.
+- **Ein Gegenüber oder eigener Bereich** (Kunde, Arbeitgeber, Firma, privates Feld): Org-Eckdaten + **Personen-Block**. Muster: `**{Name}**: {Rolle/Funktion} · {Kontakt, optional} · {Hinweis, nur wenn sachlich}` (Doppelpunkt, kein Gedankenstrich — das Muster folgt denselben Sprachregeln wie der Text). Org-weite Personen hier, vorhabenspezifische Kontakte im jeweiligen Vorhaben.
 - **Ein Vorhaben** (Projekt, Arbeitspaket): Auftrag, Scope, Stand, Beteiligte (Verweis auf die Personen darüber statt Duplikat); bei Teilstücken die Abgrenzung zum übergeordneten Vorhaben.
 
 Ein Ordner kann beides sein (ein Gegenüber mit genau einem Vorhaben) — dann trägt eine `context.md` beide Feldgruppen. Benennt der User den Gegenstand, gilt seine Ansprache. Bei Unklarheit nachfragen.
@@ -84,7 +84,7 @@ Diese Prinzipien sind das *Wie* der Befüllung des Backbones — sie ersetzen di
 
 ## Output-Format
 
-Reines Markdown. Top-Level die fünf Backbone-Sektionen mit `##`, Substruktur (vor allem unter „Lage") mit `###`, maximal 3 Ebenen tief. **YAML-Frontmatter** (`created`/`updated`) gehört an den Dateianfang — `context.md` fällt unter die Dokument-Frontmatter-Konvention. HTML-Kommentare sind erlaubt für Meta-Annotationen (Widerspruch-Marker, offene Fragen).
+Reines Markdown. Top-Level die fünf Backbone-Sektionen mit `##`, Substruktur (vor allem unter „Lage") mit `###`, maximal 3 Ebenen tief. **YAML-Frontmatter** (`created`/`updated`) gehört an den Dateianfang — `context.md` fällt unter die Dokument-Frontmatter-Konvention. HTML-Kommentare sind erlaubt für Meta-Annotationen (Widerspruch-Marker, offene Fragen). **Pointer auf andere Kontext-Ordner als relative Markdown-Links** (`../kunde/context.md`, `vorhaben_x/context.md`), keine Obsidian-Wikilinks: Jede Ebene heißt `context.md`, ein Link über den Dateinamen ist mehrdeutig; relative Pfade sind im Vault klickbar und eindeutig.
 
 Wenn ein Fakt oder KPI in mehreren Quellen identisch vorkommt, steht er genau einmal im Output — an der thematisch passenden Stelle. Nicht pro Quelle wiederholen, nicht in mehreren Sektionen duplizieren.
 

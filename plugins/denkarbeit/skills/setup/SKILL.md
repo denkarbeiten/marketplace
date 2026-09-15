@@ -30,7 +30,7 @@ Die Templates dieses Skills liegen unter `templates/` relativ zum Skill-Basisver
 | 3 | Sprache | Sprachregeln in der CLAUDE.md vorhanden (Baustein 1); `{workspace}/language.md` **optional**, nur mit geeignetem Referenzmaterial | Pflicht (Regeln) · optional (Referenz) |
 | 4 | Bestand | Liegt im Workspace Material, das **nicht** aus diesem Setup stammt (alles außer `context.md`, `CLAUDE.md`, `language.md` im Root)? | Situativ |
 | 5 | Secrets | Ein Vault ist benannt und nutzbar (OS-Schlüsselbund oder ein **angemeldeter** Passwort-Manager) · CLAUDE.md trägt den Secrets-Block · `infra.md` hält den Zustand fest, auch wenn noch kein System angebunden ist | Pflicht |
-| 6 | Permissions | Der Nutzer weiß, dass Claude im Auslieferungszustand nichts ohne Rückfrage tut, und kennt den Weg, das zu ändern | Pflicht (erklären) · optional (setzen) |
+| 6 | Permissions | Der Nutzer weiß, dass Claude im Auslieferungszustand nichts ohne Rückfrage tut, und kennt den Weg, das zu ändern · `permissions.additionalDirectories` enthält den Workspace, **gemessen aus einem Unterordner** (siehe B6) | Pflicht (erklären, Workspace freigeben) · optional (Stufe setzen) |
 
 Workspace-Pfad finden: aus der CLAUDE.md (Baustein 1 verankert ihn). Fehlt sie **oder trägt sie keinen Workspace-Anker** (der Regelfall bei bestehender Fremd-Konfiguration): den User fragen, bei Neueinrichtung `~/workspace` vorschlagen. Widersprechen sich Anker und Nutzerangabe, **gilt die Nutzerangabe** — der Anker ist dann veraltet und wird im selben Lauf nachgezogen, nicht stillschweigend übergangen. Alle Skills arbeiten danach gegen diesen Anker; `{workspace}` in den Skills meint immer ihn, nie einen festen Pfad.
 
@@ -87,7 +87,7 @@ Workspace-Pfad finden: aus der CLAUDE.md (Baustein 1 verankert ihn). Fehlt sie *
    - **Der Schlüsselbund des Rechners** (macOS `security` · Windows Credential Manager/DPAPI) → reicht vollständig.
    - **Noch nichts** → der Schlüsselbund, ohne Umschweife. Er ist da, kostet nichts und muss nicht eingerichtet werden.
 
-   Kein Produkt empfehlen, das der Nutzer nicht schon hat; kein Konto anlegen lassen. Eine Klartext-Datei ist unter keinen Umständen ein Fallback. Laufzeit-Muster einmal am gewählten Vault zeigen: Secret in die Umgebung der Session laden, nie in eine Datei.
+   Kein Produkt empfehlen, das der Nutzer nicht schon hat; kein Konto anlegen lassen. Eine Klartext-Datei ist unter keinen Umständen ein Fallback. Laufzeit-Muster einmal am gewählten Vault zeigen, und zwar den blinden Weg: Injektion als Umgebungsvariable oder Shell-Substitution ins Argument, sodass der Wert nicht im Gesprächsverlauf erscheint. Nie in eine Datei; die eine Ausnahme sind Werkzeuge, die den Wert zwingend in ihrer Konfigurationsdatei erwarten — dann direkt vom Vault dorthin rendern (z.B. `op inject`), nicht über die Ausgabe.
    Dann die zweite Frage, als Entscheidung formuliert statt als Wissensabfrage: **„Willst du die Zugänge gleich mit mir einrichten, oder lieber später?"** Nennen die Unterlagen bereits Systeme (Shop, ERP, Datenbank, API, MCP-Server), diese aufzählen statt offen zu fragen.
 
    **Die `infra.md` entsteht in beiden Fällen** — sie protokolliert den Zustand, und der ist auch dann eine Aussage, wenn noch nichts angebunden ist. Was sie nie enthält: eine leere Systemtabelle mit erfundenem Beispiel-Eintrag. Stattdessen der erhobene Stand:
@@ -101,6 +101,8 @@ Workspace-Pfad finden: aus der CLAUDE.md (Baustein 1 verankert ihn). Fehlt sie *
    **B6 — Permissions (erklären ist Pflicht, setzen ist es nicht).**
 
    **Erst messen, dann erklären** — die Mess-Pflicht gilt auch hier, ein angenommener Zustand ist keiner. Lies den `permissions`-Block und `defaultMode` aus den Settings-Dateien, die tatsächlich gelten: `{konfig}/settings.json`, daneben `{konfig}/settings.local.json` und, falls im Arbeitsbaum vorhanden, `.claude/settings.json` — die lokale schlägt die globale. Erkläre **den erhobenen Zustand**, nicht den Auslieferungszustand.
+
+   **Ein Eintrag ist Pflicht, unabhängig von der Stufe: der Workspace als zusätzliches Verzeichnis.** Sessions starten im Ordner des Vorhabens, die Kontext-Kette liegt darüber. Ohne `"permissions": {"additionalDirectories": ["{workspace}"]}` in `{konfig}/settings.json` liest eine Session im Unterordner nur ihren eigenen Ordner — `ls` und Lesen aufwärts werden blockiert, und die `context.md`, `memory.md`, `log.md` der oberen Ebenen fehlen beim Start, ohne dass es auffällt. Der Check misst das deshalb **aus einem Unterordner des Workspace**, nicht aus einer Session am Root, die nichts aufwärts lesen muss. Kann Claude die Settings-Datei nicht selbst ändern (der Berechtigungsfilter blockiert Edits an `{konfig}/settings.json` je nach Modus), den Block wörtlich vorlegen und den Handgriff beschreiben; im Ausweis bleibt der Baustein ✗, bis der Eintrag gemessen ist.
 
    Im Regelfall ist nichts gesetzt: Claude fragt dann vor jeder Datei-Änderung und jedem Kommando. Das in zwei Sätzen erklären und sagen, warum es sinnvoll ist, es zunächst so zu lassen — jede Rückfrage zeigt, was das Werkzeug tun will, und das ist die billigste Art, es kennenzulernen. Dazu der Satz, dass sich das jederzeit ändern lässt („sag mir einfach Bescheid"). Findest du bereits Regeln vor, nenne sie in Klartext statt in Syntax und lass sie unangetastet.
 
