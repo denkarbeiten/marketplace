@@ -59,13 +59,14 @@ Parse die Usereingabe und bestimme den Modus:
 
 6. **Bottom-up-Aktualisierung.** Nach dem Log-Eintrag prüfst und aktualisierst du in einem Durchlauf die Artefakte auf dem Pfad nach oben. Der User soll nicht wissen müssen, welche Datei veraltet ist — das ist dein Job.
 
-   **Messen (Pflicht, vor dem Prüfen):** Erhebe den Log-Stand mechanisch — nicht schätzen, nicht aus dem Gedächtnis:
+   **Messen (Pflicht, vor dem Prüfen):** Erhebe Log- und Memory-Stand mechanisch — nicht schätzen, nicht aus dem Gedächtnis:
 
    ```bash
-   wc -c {pfad}/log.md {pfad}/context.md ; grep -c "^- date:" {pfad}/log.md ; grep "^- date:" {pfad}/log.md | sed 's/- date: //' | sort | head -1
+   wc -c {pfad}/log.md {pfad}/context.md {pfad}/memory.md ; grep -c "^- date:" {pfad}/log.md ; grep "^- date:" {pfad}/log.md | sed 's/- date: //' | sort | head -1
+   grep -c -E '^(\*\*[^*]*|#+ .*)([0-9]{2}\.[0-9]{2}\.|[0-9]{4}-[0-9]{2}-[0-9]{2})' {pfad}/memory.md
    ```
 
-   Ergebnis festhalten: **N** Einträge gesamt, davon **M** älter als die aktuelle Arbeitswoche, Dateigrößen in KB (log **und** context). Diese Zahlen sind Pflichtbestandteil des Bestätigungsblocks (Schritt 7) — eine Volumen-Prüfung ohne erhobene Zahlen hat nicht stattgefunden.
+   Ergebnis festhalten: **N** Einträge gesamt, davon **M** älter als die aktuelle Arbeitswoche, Dateigrößen in KB (log, context **und** memory), dazu **D** = datierte Absatzköpfe der memory. Die zweite Befehlszeile zählt Zeilen, die mit einem Fettdruck-Label oder einer Überschrift beginnen, in der ein Datum steht — der Fingerabdruck eines angehängten Log-Eintrags. Liegt die nächste memory aufwärts in einem anderen Ordner als das Log, wird dort gemessen. Diese Zahlen sind Pflichtbestandteil des Bestätigungsblocks (Schritt 7) — eine Volumen-Prüfung ohne erhobene Zahlen hat nicht stattgefunden.
 
    **Prüfen:** Lies alle `memory.md` und `context.md` auf dem Pfad. Prüfe gegen den neuen Log-Eintrag und die bestehenden Log-Einträge:
    - **Volumen:** M ≥ 3 (Einträge älter als aktuelle Arbeitswoche) → verdichten. **Ab 20 KB Dateigröße ist die Verdichtung nicht mehr optional** — sie läuft im selben Durchlauf (wie Modus Verdichten, Schritte 2–4); Aufschieben nur, wenn der User es in dieser Session explizit abwählt.
@@ -76,9 +77,11 @@ Parse die Usereingabe und bestimme den Modus:
    - **temp-Erinnerung:** Führt der Ordner eine `temp.md` mit ungeerntetem Inhalt (`updated` jünger als der jüngste Log-Eintrag), im Bestätigungsblock daran erinnern — geerntet wird im Dialog, nicht vom Skill.
    - **Pointer-Probe** (mechanisch, ein `ls` gegen die Pointer der `context.md`): Zeigt ein Pointer auf eine Datei, die es nicht mehr gibt? Liegt neben der `context.md` ein Artefakt, auf das kein Pointer zeigt? Beides als Befund vorlegen, nicht selbst auflösen. Register- und Werkzeuge-Artefakte werden sonst von keinem Schritt je wieder angefasst; ein toter oder fehlender Pointer ist das einzige Signal, das ihre Verwaisung sichtbar macht.
    - **context.md zu groß:** > ~20 KB (Faustregel, justierbar) → **nicht autonom umbauen**, sondern diagnostizieren und dem User als Befund vorlegen: (a) eingesickerte Chronologien/Urteile → memory/log, (b) Register-Fall (abgeschlossen, aber betrieblich referenzpflichtig, z.B. Dedup) → eigenes Register-Artefakt neben der context.md, (c) eigenständiger Fach-Block → Fach-Artefakt + Pointer, (d) legitim groß → belassen. Geduldete Genre-Fremdkörper (Dossiers) und Register-Artefakte sind ausgenommen. **Bestätigt der User eine Auslagerung (Fall b/c), läuft der Vollzug im selben Durchlauf nach dem Auslagerungs-Protokoll** (verlustfreier Schnitt, Pointer-Rückstand mit einem Satz Substanz, Ausweis) — nicht als vertagte Empfehlung enden lassen.
+   - **memory ist ein zweites Log oder zu groß:** D ≥ 5 oder > ~30 KB (Faustregel, justierbar) → **nicht autonom umbauen** (die memory hat keine zweite Quelle), sondern diagnostizieren und dem User als Befund vorlegen: (a) chronologische Anhänge → in thematische Abschnitte verschmelzen, (b) Zustand, den die `context.md` trägt → streichen, (c) Betriebswissen → `infra.md`, (d) Urteile, die über den Ordner hinaus gelten → nächste memory aufwärts, (e) überholte oder sich widersprechende Aussagen → korrigieren, (f) mehrfach erzählte Urteile → einmal, mit dem stärksten Beleg, (g) legitim groß → belassen. **Bestätigt der User, läuft die Konsolidierung im selben Durchlauf**; steht der Ordner nicht unter Versionskontrolle, vorher eine Kopie der memory nach `archive/` im selben Ordner.
 
    **Handeln:** Wenn Signale vorliegen, handle autonom — nicht fragen, sondern tun:
-   - Memory verdichten/aktualisieren (Log → nächste memory aufwärts) — dabei **verschmelzen statt anhängen**: in bestehende thematische Abschnitte integrieren, keine neuen datierten Abschnitte stapeln. Sieht die memory aus wie ein zweites Log (chronologische Anhänge), ist die Konsolidierung der Abschnitte fällig
+   - Memory verdichten/aktualisieren (Log → nächste memory aufwärts) — dabei **verschmelzen statt anhängen**: in bestehende thematische Abschnitte integrieren, keine neuen datierten Abschnitte stapeln. **Nach dem Schreiben erneut messen:** D darf durch die Verdichtung nicht steigen — ist ein datierter Absatzkopf dazugekommen, den Absatz in einen bestehenden Abschnitt integrieren, bevor du bestätigst. Wächst die memory um mehr als etwa die Hälfte des Volumens, das aus dem Log entfernt wurde, ist umgezogen statt verdichtet worden — auf Urteil und Kausalität kürzen
+   - **„Kann das weg"-Check bei jedem Schreiben in eine memory.** Jeder Absatz, den du anfasst, bestätigt seine Relevanz neu: Er bleibt, wenn sein Urteil eine Entscheidung steuert, die wieder anstehen kann, oder einen Zustand in der `context.md` erklärt, der sonst willkürlich wirkte. Er fällt oder schrumpft zum Pointer, wenn sein Urteil inzwischen anderswo kodifiziert ist (CLAUDE.md, Skill, `infra.md`, Standard-Dokument), wenn sein Gegenstand nicht mehr existiert und das Urteil nicht darüber hinaus trägt, oder wenn er einen zweiten Beleg für ein Urteil erzählt, das schon steht (ein Beleg je Urteil, siehe Memory-Format). Die Messung ist der Auslöser für die Reichweite: unter ~20 KB nur die berührten Abschnitte, darüber die ganze Datei im selben Durchlauf. Ergebnis als Zahl in der Pflichtzeile Memory-Stand (Absätze geprüft, gefallen, gekürzt); ohne die Zahl gilt der Check als nicht gelaufen. Die Messung allein ist keine Regel: Eine memory darf wachsen, wenn jeder Absatz den Check besteht
    - Stakeholder-Memory aktualisieren, wenn sich etwas Wesentliches verändert hat
    - context.md-Stellen korrigieren, die durch die Session offensichtlich überholt sind (Backbone wahren). **Das geschieht hier, nicht über `/denkarbeit:contextify`** — der Skill ist für Neuanlage aus Rohmaterial und strukturellen Umbau da. Ein zusätzlicher Aufruf am Session-Ende kostet Kontext ohne Zusatznutzen.
    - Verdichtete Log-Einträge aus `log.md` entfernen
@@ -89,6 +92,7 @@ Parse die Usereingabe und bestimme den Modus:
 7. **Bestätigung.** Zeige dem User kompakt, was passiert ist — in einem Block:
    - Den geschriebenen Log-Eintrag
    - **Pflichtzeile Log-Stand** (nie weglassen — sie ist der Nachweis, dass die Volumen-Prüfung gelaufen ist): `Log: N Einträge (X KB), M älter als aktuelle Woche → verdichtet` bzw. `→ nicht verdichtet, weil {Grund}` · dahinter `context.md: Y KB` (ab ~20 KB mit Befund gemäß Diagnose-Fächer). Ohne die context-Zahl gilt auch die Größen-Prüfung der context.md als nicht gelaufen.
+   - **Pflichtzeile Memory-Stand** (nie weglassen): `Memory: X0 → X KB, D datierte Absatzköpfe · Check: P Absätze geprüft, G gefallen, K gekürzt` — nach einer Verdichtung zusätzlich `· Log −Y KB`. Ab D ≥ 5 oder ~30 KB mit Befund gemäß Diagnose-Fächer. Ohne diese Zeile gilt die Memory-Prüfung als nicht gelaufen, ohne die Check-Zahlen der „Kann das weg"-Check.
    - **Weichen-Ausweis:** wohin Betriebslektionen und Sprach-Drift geroutet wurden — oder „nichts geroutet" (ohne diese Zeile gilt die Genre-Weiche als nicht gelaufen)
    - Was in welchen Dateien aktualisiert/verdichtet/abgespalten wurde (falls etwas passiert ist)
    - Falls darüber hinaus nichts nötig war: Log-Eintrag + Log-Stand-Zeile + Weichen-Ausweis genügen
@@ -107,13 +111,13 @@ Parse die Usereingabe und bestimme den Modus:
    - Kausalitäten und Urteile bleiben. Details und Zwischenschritte gehen.
    - Was am Ende zählt: Was ist passiert, warum, und was hat es verändert?
    - Bei Log → Memory: mehrere Log-Einträge können zu einem Memory-Eintrag verschmelzen, wenn sie kausal zusammenhängen.
-   - **Verschmelzen statt anhängen:** in bestehende thematische Abschnitte der memory integrieren, keine datierten Abschnitte stapeln — die Struktur folgt dem Inhalt, nicht dem Kalender.
+   - **Verschmelzen statt anhängen:** in bestehende thematische Abschnitte der memory integrieren, keine datierten Abschnitte stapeln — die Struktur folgt dem Inhalt, nicht dem Kalender. Beim Verschmelzen läuft der „Kann das weg"-Check (Modus Log, Schritt 6) über den Zielabschnitt: Ein Urteil, das der Log-Eintrag bestätigt, bekommt den stärkeren Beleg und verliert den schwächeren.
    - Betriebslektionen, die im Log stecken, wandern bei der Verdichtung in die `infra.md`, für die sie gelten, nicht in die memory.
    - Bei Vorhaben → Gegenüber: nur die Essenz — was das Vorhaben über die Zusammenarbeit gelehrt hat, nicht sein Verlauf.
 
-4. **Ergebnis schreiben.** Schreibe/aktualisiere die Ziel-`memory.md`. Bei Log-Verdichtung: entferne die verdichteten Einträge aus `log.md` (die Information lebt jetzt in `memory.md`).
+4. **Ergebnis schreiben — mit Messung davor und danach.** Miss Größe und datierte Absatzköpfe (D) der Ziel-`memory.md` vor dem Schreiben (Befehl aus Modus Log, Schritt 6). Schreibe/aktualisiere die Ziel-`memory.md`. Bei Log-Verdichtung: entferne die verdichteten Einträge aus `log.md` (die Information lebt jetzt in `memory.md`). Miss erneut: D darf nicht gestiegen sein, und der Zuwachs der memory liegt unter etwa der Hälfte des aus dem Log entfernten Volumens — sonst nacharbeiten, bevor du bestätigst.
 
-5. **Bestätigung.** Zeige was verdichtet wurde und was in der Ziel-Datei steht.
+5. **Bestätigung.** Zeige was verdichtet wurde und was in der Ziel-Datei steht, dazu die **Pflichtzeile Memory-Stand** mit Vorher-Werten (`Memory: X0 → X KB, D0 → D Köpfe · Log −Y KB`).
 
 ## Ein eigenes Gedächtnis für ein Vorhaben
 
@@ -157,6 +161,7 @@ Die Datei beginnt mit einem Header, gefolgt von YAML-Einträgen. **Neueste Eintr
 - **Urteile explizit machen.** "Nicht ganz sauber gegenüber dem Angebot, aber strategisch sinnvoll" — das ist der Wert einer Memory, nicht die Fakten drumherum.
 - **Kausalität über Chronologie.** Nicht "erst A, dann B, dann C" sondern "A hat zu B geführt, weil C."
 - **Artefakte verlinken, nicht beschreiben.** Was im Artefakt steht, gehört nicht in die Memory.
+- **Body-Budget: rund 120 Wörter.** Der Body trägt den Übergang und sein Warum; Verlauf, Zahlen und Listen stehen in den Artefakten, die der Eintrag verlinkt. Ein Body über dem Budget ist ein Signal, dass ein Artefakt fehlt (Register, `infra.md`, Stand-Dokument), nicht, dass der Eintrag länger sein muss.
 - **Kein Task-Tracking.** Keine offenen Punkte, keine TODOs, keine Status-Felder. (Tasks und ihr aktueller Stand leben in `context.md` §Offene Punkte — nicht in memory.)
 - **Kein Status-Tracking.** "Projekt ist aktiv" gehört in `context.md`. Memory erfasst Übergänge, nicht Zustände.
 - **Artefakt-Links zeigen auf Dauerhaftes.** `temp.md` (flüchtiges Arbeitsblatt) ist kein stabiles Ziel — Inhalt, der referenziert werden soll, zuerst in ein dauerhaftes Artefakt ernten; sonst den flüchtigen Charakter im Eintrag vermerken.
@@ -165,7 +170,7 @@ Die Datei beginnt mit einem Header, gefolgt von YAML-Einträgen. **Neueste Eintr
 
 ## Memory-Format (`memory.md`)
 
-Prosa-Markdown, verdichtet. Im Inhalt keine YAML-Einträge, keine starre Struktur — aber **thematische Abschnitte, nicht Kalender-Anhänge**: Die Verdichtung integriert in bestehende Abschnitte; die Leserichtung folgt der Kausalität (Grundlegendes zuerst), memory wird ganz gelesen. Oben steht die Dokument-Frontmatter (`created`/`updated`): bei jeder Aktualisierung von `memory.md` `updated` auf das heutige Datum hochsetzen. Dasselbe gilt für `context.md`, wenn die Bottom-up-Aktualisierung (Schritt 6) sie korrigiert.
+Prosa-Markdown, verdichtet. Im Inhalt keine YAML-Einträge, keine starre Struktur — aber **thematische Abschnitte, nicht Kalender-Anhänge**: Die Verdichtung integriert in bestehende Abschnitte; die Leserichtung folgt der Kausalität (Grundlegendes zuerst), memory wird ganz gelesen. **Ein Absatz beginnt mit seinem Urteil; ein Datum steht im Satz, wo es etwas erklärt, nie im Absatzkopf** — ein Fettdruck-Label oder eine Überschrift mit Datum ist ein angehängter Log-Eintrag und wird gezählt (Schritt 6). **Ein Beleg je Urteil:** Ein Absatz trägt sein Urteil und die eine Episode, die es am stärksten belegt; eine zweite Episode ersetzt die erste, wenn sie stärker ist, sonst fällt sie. Zwei Belege nebeneinander sind der Anfang eines zweiten Logs. Oben steht die Dokument-Frontmatter (`created`/`updated`): bei jeder Aktualisierung von `memory.md` `updated` auf das heutige Datum hochsetzen. Dasselbe gilt für `context.md`, wenn die Bottom-up-Aktualisierung (Schritt 6) sie korrigiert.
 
 ### Beispiel
 
