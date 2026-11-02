@@ -77,11 +77,11 @@ Parse die Usereingabe und bestimme den Modus:
    - **temp-Erinnerung:** Führt der Ordner eine `temp.md` mit ungeerntetem Inhalt (`updated` jünger als der jüngste Log-Eintrag), im Bestätigungsblock daran erinnern — geerntet wird im Dialog, nicht vom Skill.
    - **Pointer-Probe** (mechanisch, ein `ls` gegen die Pointer der `context.md`): Zeigt ein Pointer auf eine Datei, die es nicht mehr gibt? Liegt neben der `context.md` ein Artefakt, auf das kein Pointer zeigt? Beides als Befund vorlegen, nicht selbst auflösen. Register- und Werkzeuge-Artefakte werden sonst von keinem Schritt je wieder angefasst; ein toter oder fehlender Pointer ist das einzige Signal, das ihre Verwaisung sichtbar macht.
    - **context.md zu groß:** > ~20 KB (Faustregel, justierbar) → **nicht autonom umbauen**, sondern diagnostizieren und dem User als Befund vorlegen: (a) eingesickerte Chronologien/Urteile → memory/log, (b) Register-Fall (abgeschlossen, aber betrieblich referenzpflichtig, z.B. Dedup) → eigenes Register-Artefakt neben der context.md, (c) eigenständiger Fach-Block → Fach-Artefakt + Pointer, (d) legitim groß → belassen. Geduldete Genre-Fremdkörper (Dossiers) und Register-Artefakte sind ausgenommen. **Bestätigt der User eine Auslagerung (Fall b/c), läuft der Vollzug im selben Durchlauf nach dem Auslagerungs-Protokoll** (verlustfreier Schnitt, Pointer-Rückstand mit einem Satz Substanz, Ausweis) — nicht als vertagte Empfehlung enden lassen.
-   - **memory ist ein zweites Log oder zu groß:** D ≥ 5 oder > ~30 KB (Faustregel, justierbar) → **nicht autonom umbauen** (die memory hat keine zweite Quelle), sondern diagnostizieren und dem User als Befund vorlegen: (a) chronologische Anhänge → in thematische Abschnitte verschmelzen, (b) Zustand, den die `context.md` trägt → streichen, (c) Betriebswissen → `infra.md`, (d) Urteile, die über den Ordner hinaus gelten → nächste memory aufwärts, (e) überholte oder sich widersprechende Aussagen → korrigieren, (f) mehrfach erzählte Urteile → einmal, mit dem stärksten Beleg, (g) legitim groß → belassen. **Bestätigt der User, läuft die Konsolidierung im selben Durchlauf**; steht der Ordner nicht unter Versionskontrolle, vorher eine Kopie der memory nach `archive/` im selben Ordner.
+   - **memory ist ein zweites Log oder zu groß:** D ≥ 5 oder > ~10 KB (Richtwert, justierbar) → **nicht autonom umbauen** (die memory hat keine zweite Quelle), sondern diagnostizieren und dem User als Befund vorlegen: (a) chronologische Anhänge → in thematische Abschnitte verschmelzen, (b) Zustand, den die `context.md` trägt → streichen, (c) Betriebswissen → `infra.md`, (d) Urteile, die über den Ordner hinaus gelten → nächste memory aufwärts, (e) überholte oder sich widersprechende Aussagen → korrigieren, (f) mehrfach erzählte Urteile → einmal, mit dem stärksten Beleg, (g) legitim groß → belassen. **Bestätigt der User, läuft die Konsolidierung im selben Durchlauf**; steht der Ordner nicht unter Versionskontrolle, vorher eine Kopie der memory nach `archive/` im selben Ordner.
 
    **Handeln:** Wenn Signale vorliegen, handle autonom — nicht fragen, sondern tun:
    - Memory verdichten/aktualisieren (Log → nächste memory aufwärts) — dabei **verschmelzen statt anhängen**: in bestehende thematische Abschnitte integrieren, keine neuen datierten Abschnitte stapeln. **Nach dem Schreiben erneut messen:** D darf durch die Verdichtung nicht steigen — ist ein datierter Absatzkopf dazugekommen, den Absatz in einen bestehenden Abschnitt integrieren, bevor du bestätigst. Wächst die memory um mehr als etwa die Hälfte des Volumens, das aus dem Log entfernt wurde, ist umgezogen statt verdichtet worden — auf Urteil und Kausalität kürzen
-   - **„Kann das weg"-Check bei jedem Schreiben in eine memory.** Jeder Absatz, den du anfasst, bestätigt seine Relevanz neu: Er bleibt, wenn sein Urteil eine Entscheidung steuert, die wieder anstehen kann, oder einen Zustand in der `context.md` erklärt, der sonst willkürlich wirkte. Er fällt oder schrumpft zum Pointer, wenn sein Urteil inzwischen anderswo kodifiziert ist (CLAUDE.md, Skill, `infra.md`, Standard-Dokument), wenn sein Gegenstand nicht mehr existiert und das Urteil nicht darüber hinaus trägt, oder wenn er einen zweiten Beleg für ein Urteil erzählt, das schon steht (ein Beleg je Urteil, siehe Memory-Format). Die Messung ist der Auslöser für die Reichweite: unter ~20 KB nur die berührten Abschnitte, darüber die ganze Datei im selben Durchlauf. Ergebnis als Zahl in der Pflichtzeile Memory-Stand (Absätze geprüft, gefallen, gekürzt); ohne die Zahl gilt der Check als nicht gelaufen. Die Messung allein ist keine Regel: Eine memory darf wachsen, wenn jeder Absatz den Check besteht
+   - **„Kann das weg"-Check bei jedem Schreiben in eine memory.** Jeder Absatz, den du anfasst, bestätigt seine Relevanz neu: Er bleibt, wenn sein Urteil eine Entscheidung steuert, die wieder anstehen kann, oder einen Zustand in der `context.md` erklärt, der sonst willkürlich wirkte. Er fällt oder schrumpft zum Pointer, wenn sein Urteil inzwischen anderswo kodifiziert ist (CLAUDE.md, Skill, `infra.md`, Standard-Dokument), wenn sein Gegenstand nicht mehr existiert und das Urteil nicht darüber hinaus trägt, oder wenn er einen zweiten Beleg für ein Urteil erzählt, das schon steht (ein Beleg je Urteil, siehe Memory-Format). Dazu das Budget: Ein Punkt über zwei Sätzen wird auf sein Urteil gekürzt, Episoden fallen. Die Messung ist der Auslöser für die Reichweite: unter ~10 KB nur die berührten Punkte, darüber die ganze Datei im selben Durchlauf. Ergebnis als Zahl in der Pflichtzeile Memory-Stand (Absätze geprüft, gefallen, gekürzt); ohne die Zahl gilt der Check als nicht gelaufen. Die Messung allein ist keine Regel: Eine memory darf wachsen, wenn jeder Absatz den Check besteht
    - Stakeholder-Memory aktualisieren, wenn sich etwas Wesentliches verändert hat
    - context.md-Stellen korrigieren, die durch die Session offensichtlich überholt sind (Backbone wahren). **Das geschieht hier, nicht über `/denkarbeit:contextify`** — der Skill ist für Neuanlage aus Rohmaterial und strukturellen Umbau da. Ein zusätzlicher Aufruf am Session-Ende kostet Kontext ohne Zusatznutzen.
    - Verdichtete Log-Einträge aus `log.md` entfernen
@@ -92,7 +92,7 @@ Parse die Usereingabe und bestimme den Modus:
 7. **Bestätigung.** Zeige dem User kompakt, was passiert ist — in einem Block:
    - Den geschriebenen Log-Eintrag
    - **Pflichtzeile Log-Stand** (nie weglassen — sie ist der Nachweis, dass die Volumen-Prüfung gelaufen ist): `Log: N Einträge (X KB), M älter als aktuelle Woche → verdichtet` bzw. `→ nicht verdichtet, weil {Grund}` · dahinter `context.md: Y KB` (ab ~20 KB mit Befund gemäß Diagnose-Fächer). Ohne die context-Zahl gilt auch die Größen-Prüfung der context.md als nicht gelaufen.
-   - **Pflichtzeile Memory-Stand** (nie weglassen): `Memory: X0 → X KB, D datierte Absatzköpfe · Check: P Absätze geprüft, G gefallen, K gekürzt` — nach einer Verdichtung zusätzlich `· Log −Y KB`. Ab D ≥ 5 oder ~30 KB mit Befund gemäß Diagnose-Fächer. Ohne diese Zeile gilt die Memory-Prüfung als nicht gelaufen, ohne die Check-Zahlen der „Kann das weg"-Check.
+   - **Pflichtzeile Memory-Stand** (nie weglassen): `Memory: X0 → X KB, D datierte Absatzköpfe · Check: P Absätze geprüft, G gefallen, K gekürzt` — nach einer Verdichtung zusätzlich `· Log −Y KB`. Ab D ≥ 5 oder ~10 KB mit Befund gemäß Diagnose-Fächer. Ohne diese Zeile gilt die Memory-Prüfung als nicht gelaufen, ohne die Check-Zahlen der „Kann das weg"-Check.
    - **Weichen-Ausweis:** wohin Betriebslektionen und Sprach-Drift geroutet wurden — oder „nichts geroutet" (ohne diese Zeile gilt die Genre-Weiche als nicht gelaufen)
    - Was in welchen Dateien aktualisiert/verdichtet/abgespalten wurde (falls etwas passiert ist)
    - Falls darüber hinaus nichts nötig war: Log-Eintrag + Log-Stand-Zeile + Weichen-Ausweis genügen
@@ -170,7 +170,7 @@ Die Datei beginnt mit einem Header, gefolgt von YAML-Einträgen. **Neueste Eintr
 
 ## Memory-Format (`memory.md`)
 
-Prosa-Markdown, verdichtet. Im Inhalt keine YAML-Einträge, keine starre Struktur — aber **thematische Abschnitte, nicht Kalender-Anhänge**: Die Verdichtung integriert in bestehende Abschnitte; die Leserichtung folgt der Kausalität (Grundlegendes zuerst), memory wird ganz gelesen. **Ein Absatz beginnt mit seinem Urteil; ein Datum steht im Satz, wo es etwas erklärt, nie im Absatzkopf** — ein Fettdruck-Label oder eine Überschrift mit Datum ist ein angehängter Log-Eintrag und wird gezählt (Schritt 6). **Ein Beleg je Urteil:** Ein Absatz trägt sein Urteil und die eine Episode, die es am stärksten belegt; eine zweite Episode ersetzt die erste, wenn sie stärker ist, sonst fällt sie. Zwei Belege nebeneinander sind der Anfang eines zweiten Logs. Oben steht die Dokument-Frontmatter (`created`/`updated`): bei jeder Aktualisierung von `memory.md` `updated` auf das heutige Datum hochsetzen. Dasselbe gilt für `context.md`, wenn die Bottom-up-Aktualisierung (Schritt 6) sie korrigiert.
+Prosa-Markdown, verdichtet. Im Inhalt keine YAML-Einträge, keine starre Struktur — aber **thematische Abschnitte, nicht Kalender-Anhänge**: Die Verdichtung integriert in bestehende Abschnitte; die Leserichtung folgt der Kausalität (Grundlegendes zuerst), memory wird ganz gelesen. **Ein Absatz beginnt mit seinem Urteil; ein Datum steht im Satz, wo es etwas erklärt, nie im Absatzkopf** — ein Fettdruck-Label oder eine Überschrift mit Datum ist ein angehängter Log-Eintrag und wird gezählt (Schritt 6). **Budget: ein Urteil je Punkt in höchstens zwei Sätzen.** Der Beleg ist ein Halbsatz, der die Entscheidung erklärt, keine Episode; Verlauf, Zahlen und Nebenfiguren bleiben im Log oder im Artefakt. Eine zweite Episode ersetzt die erste, wenn sie stärker ist, sonst fällt sie. Was in Standard-Dokument, Skill, `infra.md` oder `context.md` kodifiziert ist, steht in der memory nur als Pointer. Richtwert je Datei rund 10 KB; eine memory, die darüber wächst, erzählt statt zu urteilen (Straffung 02.11.: zwei Memorys lagen bei 25 bis 30 KB in Romanform und schrumpften ohne Verlust an Urteilen auf ein Drittel). Oben steht die Dokument-Frontmatter (`created`/`updated`): bei jeder Aktualisierung von `memory.md` `updated` auf das heutige Datum hochsetzen. Dasselbe gilt für `context.md`, wenn die Bottom-up-Aktualisierung (Schritt 6) sie korrigiert.
 
 ### Beispiel
 
@@ -189,22 +189,18 @@ Kommunikation ist ihr wichtigstes Steuerungsinstrument.
 
 ## Was die Vorhaben gelehrt haben
 
-Die im Workshop gesammelten Anwendungsfälle waren weniger reif als dargestellt;
-belastbar wurden sie erst über Einzelinterviews. Der tragfähigste Strang entstand
-als Zufallsfund daneben und traf einen blinden Fleck: die datenintensivste Funktion
-des Hauses arbeitet vollständig manuell. Der erste Vorschlag scheiterte nicht
-inhaltlich, sondern an einer parallelen Eigenentwicklung der IT — er bleibt gültig,
-ist aber nicht platzierbar.
+- Workshop-Anwendungsfälle sind weniger reif als dargestellt; belastbar werden sie erst über Einzelinterviews.
+- Der tragfähigste Strang war ein Zufallsfund: Die datenintensivste Funktion des Hauses arbeitet manuell.
+- Der erste Vorschlag scheiterte an einer parallelen Eigenentwicklung der IT, nicht inhaltlich; er bleibt gültig, ist aber nicht platzierbar.
 
 *(Namen, Zahlen und Status stehen in der `context.md` — memory trägt das Warum,
 keine Statusliste.)*
 
 ## Was wir über die Zusammenarbeit wissen
 
-Entscheidungen fallen bei {Kundin} über Prinzipien, nicht über Einzelfälle. Wer mit
-einer Vision einsteigt, verliert sie; wer beim konkreten Ärgernis anfängt, gewinnt
-sie. Diese Beobachtungen gehören hierher, weil sie die Arbeit steuern — eine
-Charakterbeschreibung wäre etwas anderes und hat in keinem Artefakt Platz.
+- Entscheidungen fallen bei {Kundin} über Prinzipien, nicht über Einzelfälle: Wer beim konkreten Ärgernis anfängt, gewinnt sie.
+
+*(Beobachtungen stehen hier, weil sie die Arbeit steuern; eine Charakterbeschreibung hat in keinem Artefakt Platz.)*
 ```
 
 ## Harte Gates
